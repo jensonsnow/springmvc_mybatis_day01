@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.crm.mapper.CustomerMapper">
+
+	<!-- 查询条件 -->
+	<sql id="customerQueryVo">
+		<where>
+			<if test="custName != null and custName !='' ">
+				and cust_name like '%${custName}%'
+			</if>
+			<if test="custSource != null and custSource !='' ">
+				and cust_source = #{custSource}
+			</if>
+			<if test="custIndustry != null and custIndustry !='' ">
+				and cust_industry = #{custIndustry}
+			</if>
+			<if test="custLevel != null and custLevel !='' ">
+				and cust_level = #{custLevel}
+			</if>
+		</where>
+	
+	</sql>
+
+
+	<!-- 根据QueryVo进行分页查询 -->
+	<select id="queryCustomerByQueryVo" parameterType="com.itheima.crm.pojo.QueryVo" resultType="com.itheima.crm.pojo.Customer">
+		SELECT
+		cust_id,
+		cust_name,
+		cust_user_id,
+		cust_create_id,
+		(select b.dict_item_name from base_dict b where b.dict_id=c.cust_source ) cust_source,
+		(select b.dict_item_name from base_dict b where b.dict_id=c.cust_industry ) cust_industry,
+		(select b.dict_item_name from base_dict b where b.dict_id=c.cust_level ) cust_level,
+		cust_linkman,
+		cust_phone,
+		cust_mobile,
+		cust_zipcode,
+		cust_address,
+		cust_createtime
+		FROM
+		customer c
+		<include refid="customerQueryVo" />
+		<if test="start != null">
+			limit #{start} ,#{rows}
+		</if>
+	</select>
+	
+	<!-- 根据queryVo查询数据条数 -->
+	<select id="queryCountByQueryVo" parameterType="com.itheima.crm.pojo.QueryVo" resultType="int">
+		select count(*) from customer
+		<include refid="customerQueryVo" />
+	</select>
+	
+</mapper>
