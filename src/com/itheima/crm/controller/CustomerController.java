@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.itheima.crm.pojo.BaseDict;
 import com.itheima.crm.pojo.Customer;
@@ -41,7 +42,7 @@ public class CustomerController {
 	private String customer_level_type;
 	
 	@RequestMapping("list")
-	public String list(Model model,QueryVo queryVo) {
+	public String queryCustomerList(Model model,QueryVo queryVo) {
 		//解决get请求乱码问题
 		try {
 			if(StringUtils.isNotBlank(queryVo.getCustName())) {
@@ -51,7 +52,6 @@ public class CustomerController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 		
 		//查询行业
 		List<BaseDict> industryType = baseDictService.getBaseDictByCode(customer_industry_type);
@@ -83,5 +83,43 @@ public class CustomerController {
 
 		
 		return "customer";
-	};
+	}
+	
+	/**
+	 * 根据ID查询数据内容 并返回JSON格式数据 
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("edit")
+	@ResponseBody
+	public Customer queryCustomerById(Long id) {
+		Customer customer = customerService.queryCustomerById(id);
+		return customer;
+	}
+	
+	/**
+	 * 根据ID修改数据内容 
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("update")
+	@ResponseBody
+	public String updateCustomerById(Customer customer) {
+		customerService.updateCustomerById(customer);
+		return "OK";
+	}
+	
+	
+	/**
+	 * 根据ID删除数据 
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("delete")
+	@ResponseBody
+	public String deleteCustomerById(Long id) {
+		customerService.deleteCustomerById(id);
+		return "OK";
+	}
+	
 }

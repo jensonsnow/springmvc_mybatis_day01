@@ -37,5 +37,24 @@ public class CustomerServiceImpl implements CustomerService {
 		return page;
 	}
 
+
+	public Customer queryCustomerById(Long id) {
+
+		Customer customer = customerMapper.queryCustomerById(id);
+		return customer;
+	}
+
+
+	public void updateCustomerById(Customer customer) {
+		// TODO Auto-generated method stub
+		customerMapper.updateCustomerById(customer);
+	}
+
+
+	public void deleteCustomerById(Long id) {
+		// TODO Auto-generated method stub
+		customerMapper.deleteCustomerById(id);
+	}
+
 }
  
